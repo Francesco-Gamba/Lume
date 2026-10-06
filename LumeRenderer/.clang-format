@@ -1,0 +1,68 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+Standard: c++20
+
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 110
+
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: false
+AlignTrailingComments: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: true
+  AfterControlStatement: MultiLine
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: true
+  BeforeElse: true
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+BreakConstructorInitializers: BeforeComma
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+Cpp11BracedListStyle: true
+DerivePointerAlignment: false
+EmptyLineBeforeAccessModifier: LogicalBlock
+FixNamespaceComments: true
+IndentCaseLabels: false
+IndentPPDirectives: AfterHash
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+NamespaceIndentation: None
+PackConstructorInitializers: NextLine
+PointerAlignment: Left
+ReferenceAlignment: Left
+SeparateDefinitionBlocks: Always
+SpaceAfterTemplateKeyword: false
+SpacesBeforeTrailingComments: 2
+
+# Include order: own headers, then external, then standard library.
+SortIncludes: CaseInsensitive
+IncludeBlocks: Regroup
+IncludeCategories:
+  - Regex:    '^"(core|math|gfx|scene|renderer|ui)/'
+    Priority: 1
+  - Regex:    '^"'
+    Priority: 2
+  - Regex:    '^<(glad|GLFW|glm|imgui|embree|fastgltf|tracy|stb)'
+    Priority: 3
+  - Regex:    '^<.*\.h>'
+    Priority: 4
+  - Regex:    '^<'
+    Priority: 5

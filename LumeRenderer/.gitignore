@@ -1,0 +1,53 @@
+# ---- Build output ----
+out/
+build/
+build-*/
+cmake-build-*/
+install/
+CMakeUserPresets.json
+
+# ---- Dependencies (vcpkg manifest mode installs here) ----
+vcpkg_installed/
+.vcpkg-root
+
+# ---- IDE / editor ----
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.sln.docstates
+.cache/
+compile_commands.json
+
+# ---- Compiled binaries & intermediates ----
+*.exe
+*.dll
+*.lib
+*.pdb
+*.ilk
+*.obj
+*.exp
+*.idb
+
+# ---- Runtime state (not source) ----
+imgui.ini
+config/
+cache/
+screenshots/
+*.log
+
+# ---- Profiling / debugging captures ----
+*.rdc
+*.cap
+*.tracy
+captures/
+
+# ---- Reference assets: fetched by tools/python/fetch_reference.py, never committed ----
+assets/reference/
+
+# ---- Blender ----
+# Blender sources live outside this repo (see README). These guard against strays.
+*.blend1
+*.blend2
+*.blend@

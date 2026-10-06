@@ -1,0 +1,14 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+    "name": "lume",
+    "version": "0.1.0",
+    "dependencies": [
+        "glfw3",
+        "glm",
+        {
+            "name": "imgui",
+            "features": [ "glfw-binding", "opengl3-binding", "docking-experimental" ]
+        }
+    ],
+    "builtin-baseline": "2f99ffd2d037906d9d3457cc8c3554983af4a956"
+}

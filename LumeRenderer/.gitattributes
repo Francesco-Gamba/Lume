@@ -1,0 +1,43 @@
+# Default: let Git handle text, normalise to LF in the repo.
+* text=auto
+
+# ---- Source: force LF so shader line directives and diffs stay sane ----
+*.c      text eol=lf
+*.cpp    text eol=lf
+*.h      text eol=lf
+*.hpp    text eol=lf
+*.inl    text eol=lf
+*.glsl   text eol=lf
+*.vert   text eol=lf
+*.frag   text eol=lf
+*.comp   text eol=lf
+*.geom   text eol=lf
+*.cmake  text eol=lf
+*.txt    text eol=lf
+*.json   text eol=lf
+*.md     text eol=lf
+*.py     text eol=lf
+*.yml    text eol=lf
+
+# ---- Windows-only scripts keep CRLF ----
+*.bat    text eol=crlf
+*.cmd    text eol=crlf
+
+# ---- Binary assets: Git LFS (run `git lfs install` once before adding any) ----
+*.glb    filter=lfs diff=lfs merge=lfs -text
+*.gltf   filter=lfs diff=lfs merge=lfs -text
+*.bin    filter=lfs diff=lfs merge=lfs -text
+*.hdr    filter=lfs diff=lfs merge=lfs -text
+*.exr    filter=lfs diff=lfs merge=lfs -text
+*.ktx2   filter=lfs diff=lfs merge=lfs -text
+*.dds    filter=lfs diff=lfs merge=lfs -text
+*.png    filter=lfs diff=lfs merge=lfs -text
+*.jpg    filter=lfs diff=lfs merge=lfs -text
+*.jpeg   filter=lfs diff=lfs merge=lfs -text
+*.tga    filter=lfs diff=lfs merge=lfs -text
+# .blend sources are kept outside the repo, but if one ever lands here, LFS it.
+*.blend  filter=lfs diff=lfs merge=lfs -text
+
+# ---- Don't try to diff binaries ----
+*.rdc    binary
+*.tracy  binary
