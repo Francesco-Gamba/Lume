@@ -1,9 +1,10 @@
 add_executable(lume
     main.cpp
     core/window.cpp
+    core/app.cpp
+    gfx/gl_debug.cpp
 )
 
-# src/ is the only include root: #include "gfx/shader.h"
 target_include_directories(lume PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(lume PRIVATE
@@ -11,12 +12,11 @@ target_link_libraries(lume PRIVATE
     glfw
     glm::glm
     imgui::imgui
+    assimp::assimp
 )
 
 if(MSVC)
     target_compile_options(lume PRIVATE /W4 /permissive- /Zc:preprocessor /utf-8)
 endif()
 
-set_target_properties(lume PROPERTIES
-    VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-)
+target_compile_definitions(lume PRIVATE LUME_ASSET_DIR="${CMAKE_SOURCE_DIR}/assets")
