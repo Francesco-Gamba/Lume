@@ -72,6 +72,37 @@ namespace lume {
         std::cout << "Loaded " << scene->mNumMeshes << " meshes, " << vertices.size() << " vertices, "
                   << indices.size() / 3 << "triagnles \n"; 
 
+
+        unsigned int vbo, vao, ebo;
+
+        glCreateBuffers(1, &vbo);
+        glNamedBufferStorage(vbo, vertices.size() * sizeof(Vertex), vertices.data(), 0);
+
+        glCreateBuffers(1, &ebo);
+        glNamedBufferStorage(ebo, indices.size() * sizeof(uint32_t), indices.data(), 0);
+
+        //describe how to read the buffers
+        glCreateVertexArrays(1, &vao);
+        
+        //attache vbo to slot 0, start at byte 0, one vertex per step
+        glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(Vertex));
+        
+        //attach ebo and vao. each vao has only one element buffer;
+        glVertexArrayElementBuffer(vao, ebo);
+
+        //Attribute 0 = pos 3 floats per pos
+        glEnableVertexArrayAttrib(vao, 0);
+        glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, pos));
+        glVertexArrayAttribBinding(vao, 0, 0);
+
+        //Attribute 1  = normals, 3 floats per normal, offset of normal, read from slot 0
+        glEnableVertexArrayAttrib(vao, 1);
+        glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
+        glVertexArrayAttribBinding(vao, 1, 0);
+
+        index_count = (GLsizei)indices.size();
+
+
 	}
 
 	void App::frame() {
