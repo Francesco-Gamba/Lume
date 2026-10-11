@@ -78,7 +78,46 @@ namespace lume {
 
 
     Shader::Shader(const std::filesystem::path& path) {
+        std::string vs_src;
+        std::string fs_src;
+        split_stages(read_file(path), vs_src, fs_src);
 
+        if (vs_src.empty() || fs_src.empty()) {
+            throw std::runtime_error(path.string() + ": missing #stage vertex or #stage fragment");
+        }
+
+        // If this throws, the exception already carries the compiler log.
+        GLuint vs = compile_stage(GL_VERTEX_SHADER, vs_src, path, "vertex");
+        GLuint fs = 0;
+
+        try {
+            fs = compile_stage(GL_FRAGMENT_SHADER, fs_src, path, "fragment");
+        }
+        catch (...) {
+            glDeleteShader(vs);  // destructor won't run if the constructor throws
+            throw;               // rethrow the original exception, log included
+        }
+
+
+        program_ = glCreateProgram();
+        glAttachShader(program_, vs);
+        glAttachShader(program_, fs);
+        glLinkProgram(program_);
+        glDeleteShader(vs);
+        glDeleteShader(fs);
+
+        GLint ok = 0;
+        glGetProgramiv(program_, GL_LINK_STATUS, &ok);
+
+        if (!ok) {
+            GLint len = 0;
+            glGetProgramiv(program_, GL_INFO_LOG_LENGTH, &len);
+            std::string log(len, '\0');
+            glGetProgramInfoLog(program_, len, nullptr, log.data());
+            glDeleteProgram(program_);
+            program_ = 0;
+            throw std::runtime_error(path.string() + " [link]\n" + log);
+        }
     }
 
     Shader::~Shader()
@@ -89,7 +128,7 @@ namespace lume {
     }
 
     void Shader::bind() const {
-        glUseProgram(_program_);
+        glUseProgram(program_);
     }
 
 }

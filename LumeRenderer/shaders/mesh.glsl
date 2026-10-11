@@ -1,9 +1,9 @@
 #version 460 core
 
 /*---- UNIFORMS - GLOBALS ----*/
-
 uniform mat4 uModel;
 uniform mat4 uViewProj;
+
 
 
 /*------ VERTEX SHADER ------*/
@@ -22,9 +22,7 @@ void main() {
 /*------ FRAGMENT SHADER ------*/
 #stage fragment
 
-
 in vec3 vNormal;
-
 out vec4 FragColor;
 
 void main() {

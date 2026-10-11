@@ -1,116 +1,66 @@
 #include "core/app.h"
 #include "gfx/gl_debug.h"
-
 #include <glm/gtc/matrix_transform.hpp>   // translate, rotate, lookAt, perspective
 #include <glm/gtc/type_ptr.hpp>           // value_ptr
-
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
-
+#define GLFW_INCLUDE_NONE
+#include <GLFW/glfw3.h>                   // glfwGetTime
 #include <vector>
-#include <cfloat>
-#include <cstddef>
 #include <iostream>
-#include <span>
+#include <stdexcept>
+#include <string>
+#include "scene/Mesh_loader.h"
+#include "ui/imgui_layer.h"
 
 
 namespace lume {
 
-    struct Vertex
-    {
-        glm::vec3 pos;
-        glm::vec3 normal;
-    };
 
-    struct Bbox
+	App::App() : window(1024, 768, "Lume"), mesh_shader(LUME_SHADER_DIR "/mesh.glsl")
     {
-        glm::vec3 bmin;
-        glm::vec3 bmax;
-    };
-
-	App::App() : window(1024, 768, "Lume") {
         std::cout << glGetString(GL_VENDOR) << " | " << glGetString(GL_RENDERER) << " | " << glGetString(GL_VERSION) << "\n";
         install_gl_debug_output();
 
-        Assimp::Importer importer;
 
-        const aiScene* scene = importer.ReadFile(LUME_ASSET_DIR "/meshes/Combined.glb", aiProcess_Triangulate | aiProcess_GenSmoothNormals| aiProcess_JoinIdenticalVertices | aiProcess_PreTransformVertices);
-
-        if (!scene || !scene->mRootNode || (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE)) {
-            throw std::runtime_error(std::string("assimp: ") + importer.GetErrorString());
+        for (MeshData data : load_mesh(LUME_ASSET_DIR "/meshes/Separated.glb")) {
+            meshes_.emplace_back(data);
+            scene_bounds_.expand(data.bounds);
         }
 
-        std::vector<Vertex> vertices;
-        std::vector<uint32_t> indices;
-        
-        glm::vec3 bmin(FLT_MAX);
-        glm::vec3 bmax(-FLT_MAX);
+        std::cout << meshes_.size() << " Meshes loaded. \n";
 
+        // Frame the camera on the model's bounding box
+        center_ = scene_bounds_.center();
+        radius_ = scene_bounds_.radius();
+        dist_   = radius_ / glm::sin(glm::radians(22.5f)) * 1.1f;   // fits a 45° vertical FOV
+        eye_    = center_ + glm::vec3(0.0f, radius_ * 0.3f, dist_);
 
-        for (const aiMesh* mesh : std::span(scene->mMeshes, scene->mNumMeshes)) {
-            uint32_t base = (uint32_t)vertices.size();
-            for (unsigned v = 0; v < mesh->mNumVertices; v++) {
-                const aiVector3D& p = mesh->mVertices[v];
-                const aiVector3D& n = mesh->mNormals[v];
-
-                glm::vec3 pos(p.x, p.y, p.z);
-
-                vertices.push_back({pos, glm::vec3(n.x, n.y, n.z)});
-
-                bmin = glm::min(bmin, pos);
-                bmax = glm::max(bmax, pos);
-            }
-
-            for (const aiFace& face : std::span(mesh->mFaces, mesh->mNumFaces)) {
-                for (unsigned idx : std::span(face.mIndices, face.mNumIndices)) {
-                    indices.push_back(base + idx);
-                }
-            }
-        }
-
-        std::cout << "Loaded " << scene->mNumMeshes << " meshes, " << vertices.size() << " vertices, "
-                  << indices.size() / 3 << "triagnles \n"; 
-
-
-        unsigned int vbo, vao, ebo;
-
-        glCreateBuffers(1, &vbo);
-        glNamedBufferStorage(vbo, vertices.size() * sizeof(Vertex), vertices.data(), 0);
-
-        glCreateBuffers(1, &ebo);
-        glNamedBufferStorage(ebo, indices.size() * sizeof(uint32_t), indices.data(), 0);
-
-        //describe how to read the buffers
-        glCreateVertexArrays(1, &vao);
-        
-        //attache vbo to slot 0, start at byte 0, one vertex per step
-        glVertexArrayVertexBuffer(vao, 0, vbo, 0, sizeof(Vertex));
-        
-        //attach ebo and vao. each vao has only one element buffer;
-        glVertexArrayElementBuffer(vao, ebo);
-
-        //Attribute 0 = pos 3 floats per pos
-        glEnableVertexArrayAttrib(vao, 0);
-        glVertexArrayAttribFormat(vao, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, pos));
-        glVertexArrayAttribBinding(vao, 0, 0);
-
-        //Attribute 1  = normals, 3 floats per normal, offset of normal, read from slot 0
-        glEnableVertexArrayAttrib(vao, 1);
-        glVertexArrayAttribFormat(vao, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
-        glVertexArrayAttribBinding(vao, 1, 0);
-
-        index_count = (GLsizei)indices.size();
-
-
+        glEnable(GL_DEPTH_TEST);
 	}
 
-	void App::frame() {
+	void App::frame(){
         int width, height;
         window.framebuffer_size(width, height);
+        if (width == 0 || height == 0) return;   // minimized window
+
         glViewport(0, 0, width, height);
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.12f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Matrices: spin the model around its own center
+        float t = (float)glfwGetTime();
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), center_) * glm::rotate(glm::mat4(1.0f), t * 0.5f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0f), -center_);
+        glm::mat4 view  = glm::lookAt(eye_, center_, glm::vec3(0, 1, 0));
+        glm::mat4 proj  = glm::perspective(glm::radians(35.0f), (float)width / height, radius_ * 0.01f, dist_ + radius_ * 4.0f);
+
+        // Shader + uniforms
+        mesh_shader.bind();
+        mesh_shader.set("uModel", model);
+        mesh_shader.set("uViewProj", proj * view);
+
+
+        for (const Mesh& mesh : meshes_) {
+            mesh.draw();
+        }
 	}
 
 	void App::run() {

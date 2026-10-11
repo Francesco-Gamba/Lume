@@ -3,6 +3,10 @@ add_executable(lume
     core/window.cpp
     core/app.cpp
     gfx/gl_debug.cpp
+    gfx/shader.cpp
+    gfx/mesh.cpp
+    scene/Mesh_Loader.cpp
+    ui/imgui_layer.cpp
 )
 
 target_include_directories(lume PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
@@ -20,3 +24,4 @@ if(MSVC)
 endif()
 
 target_compile_definitions(lume PRIVATE LUME_ASSET_DIR="${CMAKE_SOURCE_DIR}/assets")
+target_compile_definitions(lume PRIVATE LUME_SHADER_DIR="${CMAKE_SOURCE_DIR}/shaders")
