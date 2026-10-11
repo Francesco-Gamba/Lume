@@ -6,6 +6,8 @@
 #include "gfx/Mesh.h"
 #include "math/BBox.h"
 #include <vector>
+#include "ui/imgui_layer.h"
+#include "core/debug_settings.h"
 
 
 namespace lume {
@@ -22,8 +24,11 @@ public:
 
 private:
     void frame();
+
     Window window;
+    ImGuiLayer imgui_;
     Shader mesh_shader;
+    FrameStats stats_;
 
     std::vector<Mesh> meshes_;
     BBox scene_bounds_;

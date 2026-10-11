@@ -3,10 +3,11 @@ add_executable(lume
     core/window.cpp
     core/app.cpp
     gfx/gl_debug.cpp
-    gfx/shader.cpp
-    gfx/mesh.cpp
+    gfx/Shader.cpp
+    gfx/Mesh.cpp
     scene/Mesh_Loader.cpp
     ui/imgui_layer.cpp
+    ui/debug_panel.cpp
 )
 
 target_include_directories(lume PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

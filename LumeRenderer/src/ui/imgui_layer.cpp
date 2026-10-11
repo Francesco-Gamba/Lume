@@ -1,14 +1,16 @@
-#include "imgui_layer.h"
+#include "ui/imgui_layer.h"
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <cassert>
 
 namespace lume {
 	ImGuiLayer::ImGuiLayer(GLFWwindow* window) {
 		IMGUI_CHECKVERSION();
+        assert(ImGui::GetCurrentContext() == nullptr && "ImGuiLayer already exists");
         ImGui::CreateContext();
 
-		ImGuiIO io = ImGui::GetIO();
+		ImGuiIO& io = ImGui::GetIO();
         io.IniFilename = nullptr;
         ImGui::StyleColorsDark();
         ImGui_ImplGlfw_InitForOpenGL(window, true);

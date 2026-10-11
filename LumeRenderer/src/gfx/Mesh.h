@@ -39,6 +39,8 @@ namespace lume {
             void draw() const;
 
             const BBox& bounds() const { return bounds_; }
+            GLsizei index_count() const { return index_count_; }
+
 
         private:
             void release();

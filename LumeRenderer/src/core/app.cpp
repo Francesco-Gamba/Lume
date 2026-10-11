@@ -8,25 +8,33 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-#include "scene/Mesh_loader.h"
-#include "ui/imgui_layer.h"
+#include "scene/Mesh_Loader.h"
+#include "ui/debug_panel.h"
 
 
 namespace lume {
 
 
-	App::App() : window(1024, 768, "Lume"), mesh_shader(LUME_SHADER_DIR "/mesh.glsl")
+	App::App() : window(1024, 768, "Lume"), imgui_(window.handle()), mesh_shader(LUME_SHADER_DIR "/mesh.glsl")
     {
         std::cout << glGetString(GL_VENDOR) << " | " << glGetString(GL_RENDERER) << " | " << glGetString(GL_VERSION) << "\n";
         install_gl_debug_output();
 
 
-        for (MeshData data : load_mesh(LUME_ASSET_DIR "/meshes/Separated.glb")) {
+        for (const MeshData& data : load_mesh(LUME_ASSET_DIR "/meshes/Separated.glb")) {
             meshes_.emplace_back(data);
             scene_bounds_.expand(data.bounds);
         }
 
         std::cout << meshes_.size() << " Meshes loaded. \n";
+
+        stats_.gpu_name = reinterpret_cast<const char*> (glGetString(GL_RENDERER));
+        stats_.meshes = (int)meshes_.size();
+        stats_.triangles = 0;
+        
+        for (const Mesh& mesh : meshes_) {
+            stats_.triangles += mesh.index_count() / 3;
+        }
 
         // Frame the camera on the model's bounding box
         center_ = scene_bounds_.center();
@@ -57,17 +65,34 @@ namespace lume {
         mesh_shader.set("uModel", model);
         mesh_shader.set("uViewProj", proj * view);
 
-
+        stats_.draw_calls = 0;
         for (const Mesh& mesh : meshes_) {
             mesh.draw();
+            ++ stats_.draw_calls;
         }
 	}
 
 	void App::run() {
+
+        double last = glfwGetTime();
+
         while (!window.should_close()) {
+            
+            double now = glfwGetTime();
+            stats_.update(float((now-last) * 1000.0));
+            last = now;
+
+
+            imgui_.begin_frame();
+            draw_debug_panel(stats_);
+
             frame();
+            
+            imgui_.end_frame();
+
             window.swap_buffers();
             window.poll_events();
+        
         }
 	}
 }
