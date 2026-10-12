@@ -10,6 +10,7 @@
 #include <string>
 #include "scene/Mesh_Loader.h"
 #include "ui/debug_panel.h"
+#include <imgui.h>
 
 
 namespace lume {
@@ -37,10 +38,13 @@ namespace lume {
         }
 
         // Frame the camera on the model's bounding box
-        center_ = scene_bounds_.center();
-        radius_ = scene_bounds_.radius();
-        dist_   = radius_ / glm::sin(glm::radians(22.5f)) * 1.1f;   // fits a 45° vertical FOV
-        eye_    = center_ + glm::vec3(0.0f, radius_ * 0.3f, dist_);
+        glm::vec3 center = scene_bounds_.center();
+        float radius = scene_bounds_.radius();
+        float dist = radius / glm::sin(glm::radians(camera_.fov_y * 0.5f)) * 1.1f;
+        camera_.position = center + glm::vec3(0, radius * 0.3f, dist);
+        camera_.look_at(center);
+        camera_.near_plane = radius * 0.01f;
+        camera_.far_plane = dist + radius * 4.0f;
 
         glEnable(GL_DEPTH_TEST);
 	}
@@ -49,27 +53,36 @@ namespace lume {
         int width, height;
         window.framebuffer_size(width, height);
         if (width == 0 || height == 0) return;   // minimized window
-
         glViewport(0, 0, width, height);
-        glClearColor(0.1f, 0.1f, 0.12f, 1.0f);
+
+        if (settings_.vsync != prev_vsync_) {
+            glfwSwapInterval(settings_.vsync ? 1 : 0);
+            prev_vsync_ = settings_.vsync;
+        }
+
+        glClearColor(settings_.clear_color.r, settings_.clear_color.g, settings_.clear_color.b, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Matrices: spin the model around its own center
-        float t = (float)glfwGetTime();
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), center_) * glm::rotate(glm::mat4(1.0f), t * 0.5f, glm::vec3(0, 1, 0)) * glm::translate(glm::mat4(1.0f), -center_);
-        glm::mat4 view  = glm::lookAt(eye_, center_, glm::vec3(0, 1, 0));
-        glm::mat4 proj  = glm::perspective(glm::radians(35.0f), (float)width / height, radius_ * 0.01f, dist_ + radius_ * 4.0f);
+        settings_.cull ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+        glPolygonMode(GL_FRONT_AND_BACK, settings_.wireframe ? GL_LINE : GL_FILL);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        float aspect = float(width) / float(height);
 
         // Shader + uniforms
         mesh_shader.bind();
         mesh_shader.set("uModel", model);
-        mesh_shader.set("uViewProj", proj * view);
+        mesh_shader.set("uViewProj", camera_.proj(aspect) * camera_.view());
+        mesh_shader.set("uViewMode", (int)settings_.view);
+        mesh_shader.set("uSunDir", settings_.sun_dir);
 
         stats_.draw_calls = 0;
         for (const Mesh& mesh : meshes_) {
             mesh.draw();
             ++ stats_.draw_calls;
         }
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
 	void App::run() {
@@ -84,7 +97,20 @@ namespace lume {
 
 
             imgui_.begin_frame();
-            draw_debug_panel(stats_);
+            
+            InputState in = window.input();
+            const ImGuiIO& io = ImGui::GetIO();
+            
+            if (io.WantCaptureMouse) {
+                in.clear_mouse();
+            }
+
+            if (io.WantCaptureKeyboard) {
+                in.clear_keyboard();
+            }
+
+
+            draw_debug_panel(camera_, settings_ ,stats_, in);
 
             frame();
             

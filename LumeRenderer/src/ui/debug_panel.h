@@ -2,5 +2,9 @@
 
 namespace lume {
 	struct FrameStats;
-	void draw_debug_panel(const FrameStats& stats);
+	struct DebugSettings;
+    class Camera;
+    struct InputState;
+	
+	void draw_debug_panel(Camera& camera, DebugSettings& settings, const FrameStats& stats, const InputState& input);
 }

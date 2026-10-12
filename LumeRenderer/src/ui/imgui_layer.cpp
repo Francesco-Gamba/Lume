@@ -13,6 +13,8 @@ namespace lume {
 		ImGuiIO& io = ImGui::GetIO();
         io.IniFilename = nullptr;
         ImGui::StyleColorsDark();
+        ImGuiStyle& style = ImGui::GetStyle();
+        style.FontSizeBase = 20.0f;
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 460");
 	}

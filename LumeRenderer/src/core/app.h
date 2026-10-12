@@ -8,6 +8,7 @@
 #include <vector>
 #include "ui/imgui_layer.h"
 #include "core/debug_settings.h"
+#include "scene/Camera.h"
 
 
 namespace lume {
@@ -29,15 +30,13 @@ private:
     ImGuiLayer imgui_;
     Shader mesh_shader;
     FrameStats stats_;
+    DebugSettings settings_;
+    bool prev_vsync_ = !DebugSettings{}.vsync;   // forced mismatch: frame 1 always applies the setting
 
     std::vector<Mesh> meshes_;
     BBox scene_bounds_;
-
-    glm::vec3 center_{0.0f};
-    glm::vec3 eye_{0.0f};
     
-    float radius_ = 1.0f;
-    float dist_ = 1.0f;
+    Camera camera_;
 };
 
 }  // namespace lume
