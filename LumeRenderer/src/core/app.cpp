@@ -22,6 +22,7 @@ namespace lume {
         install_gl_debug_output();
 
 
+
         for (const MeshData& data : load_mesh(LUME_ASSET_DIR "/meshes/Separated.glb")) {
             meshes_.emplace_back(data);
             scene_bounds_.expand(data.bounds);
@@ -43,6 +44,7 @@ namespace lume {
         float dist = radius / glm::sin(glm::radians(camera_.fov_y * 0.5f)) * 1.1f;
         camera_.position = center + glm::vec3(0, radius * 0.3f, dist);
         camera_.look_at(center);
+        controller_.pivot_distance = glm::length(center - camera_.position);   // first orbit/zoom goes around the model
         camera_.near_plane = radius * 0.01f;
         camera_.far_plane = dist + radius * 4.0f;
 
@@ -92,8 +94,10 @@ namespace lume {
         while (!window.should_close()) {
             
             double now = glfwGetTime();
-            stats_.update(float((now-last) * 1000.0));
+            delta_time_ = float(now - last);
+            stats_.update(float(delta_time_ * 1000.0));
             last = now;
+
 
 
             imgui_.begin_frame();
@@ -109,8 +113,12 @@ namespace lume {
                 in.clear_keyboard();
             }
 
-
-            draw_debug_panel(camera_, settings_ ,stats_, in);
+            int fb_w = 0, fb_h = 0;
+            window.framebuffer_size(fb_w, fb_h);
+            if (fb_h > 0) {                                        // minimized window: pan would divide by 0
+                controller_.camera_update(in, camera_, delta_time_, float(fb_h));
+            }
+            draw_debug_panel(camera_, settings_ ,stats_, in, controller_);
 
             frame();
             

@@ -9,6 +9,7 @@
 #include "ui/imgui_layer.h"
 #include "core/debug_settings.h"
 #include "scene/Camera.h"
+#include "camera_controller.h"
 
 
 namespace lume {
@@ -25,6 +26,7 @@ public:
 
 private:
     void frame();
+    float delta_time_;
 
     Window window;
     ImGuiLayer imgui_;
@@ -37,6 +39,7 @@ private:
     BBox scene_bounds_;
     
     Camera camera_;
+    CameraController controller_;
 };
 
 }  // namespace lume
