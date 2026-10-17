@@ -10,6 +10,7 @@
 #include "core/debug_settings.h"
 #include "scene/Camera.h"
 #include "camera_controller.h"
+#include "gfx/camera_ub.h"
 
 
 namespace lume {
@@ -26,14 +27,15 @@ public:
 
 private:
     void frame();
-    float delta_time_;
+    float delta_time_ = 0.0f;
 
     Window window;
+    CameraUB camera_ub_;
     ImGuiLayer imgui_;
     Shader mesh_shader;
     FrameStats stats_;
     DebugSettings settings_;
-    bool prev_vsync_ = !DebugSettings{}.vsync;   // forced mismatch: frame 1 always applies the setting
+    bool prev_vsync_ = !DebugSettings{}.vsync;
 
     std::vector<Mesh> meshes_;
     BBox scene_bounds_;

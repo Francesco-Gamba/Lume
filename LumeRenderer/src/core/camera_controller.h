@@ -13,7 +13,7 @@ namespace lume {
             float rotation_sensitivity = 0.5f;    
             float fly_speed = 10.0f;             
             float boost_multiplier = 2.0f;        
-            float zoom_step = 0.1f;               // fraction of the distance to the pivot covered per scroll notch, in (0, 1)
+            float zoom_step = 0.1f;
             float drag_zoom_sensitivity = 0.01f;  
             float min_distance = 0.05f;          
             float pivot_distance = 10.0f;         

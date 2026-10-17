@@ -71,10 +71,12 @@ namespace lume {
         glm::mat4 model = glm::mat4(1.0f);
         float aspect = float(width) / float(height);
 
-        // Shader + uniforms
+        //Camera Buffer
+        camera_ub_.update(camera_, aspect);
+
+        //Shader
         mesh_shader.bind();
         mesh_shader.set("uModel", model);
-        mesh_shader.set("uViewProj", camera_.proj(aspect) * camera_.view());
         mesh_shader.set("uViewMode", (int)settings_.view);
         mesh_shader.set("uSunDir", settings_.sun_dir);
 

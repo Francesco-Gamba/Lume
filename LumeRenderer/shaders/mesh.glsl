@@ -1,11 +1,18 @@
 #version 460 core
 
 /*---- UNIFORMS - GLOBALS ----*/
+
+layout(std140, binding = 0) uniform CameraBlock{
+    mat4 uView;
+    mat4 uProj;
+    mat4 uViewProj;
+    mat4 uPrevViewProj;
+    vec4 uCamPos;
+};
+
 uniform mat4 uModel;
-uniform mat4 uViewProj;
 uniform int uViewMode;
 uniform vec3 uSunDir;
-
 
 
 /*------ VERTEX SHADER ------*/

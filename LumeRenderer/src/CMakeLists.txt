@@ -5,6 +5,7 @@ add_executable(lume
     gfx/gl_debug.cpp
     gfx/Shader.cpp
     gfx/Mesh.cpp
+    gfx/camera_ub.cpp
     scene/Mesh_Loader.cpp
     scene/Camera.cpp
     ui/imgui_layer.cpp

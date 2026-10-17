@@ -13,7 +13,6 @@ namespace lume {
 	
 	void draw_debug_panel(Camera& camera, DebugSettings& settings, const FrameStats& stats, const InputState& input, CameraController& controller)
     {   
-        // Independent window: ShowDemoWindow does its own Begin/End
         if (settings.show_demo) {
             ImGui::ShowDemoWindow(&settings.show_demo);
         }
@@ -66,7 +65,6 @@ namespace lume {
                 }
 
                 if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen)) {
-                    // Typed fields: InputFloat has no min/max, so each value is clamped right after its field
                     ImGui::SeparatorText("Transform");
                     ImGui::Text("Position");
                     ImGui::InputFloat3("##cam_pos", &camera.position.x, "%.3f");
@@ -88,7 +86,7 @@ namespace lume {
                     ImGui::Text("Far plane");
                     ImGui::InputFloat("##cam_far", &camera.far_plane, 10.0f, 100.0f, "%.1f");
                     camera.near_plane = glm::max(camera.near_plane, 0.0001f);
-                    camera.far_plane  = glm::max(camera.far_plane, camera.near_plane * 1.01f);   // far always beyond near
+                    camera.far_plane  = glm::max(camera.far_plane, camera.near_plane * 1.01f);   
 
                     ImGui::SeparatorText("Controller");
                     ImGui::Text("Pivot distance: %.3f", controller.pivot_distance);
