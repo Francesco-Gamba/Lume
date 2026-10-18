@@ -13,22 +13,30 @@ namespace lume {
 	{
 
 		public:
-			struct Light	//BETTER TO MOVE LATER TO OWN CLASS
+			struct Light	//TO DO: MOVE LATER TO OWN CLASS
 			{
-                glm::vec3 color;
-                glm::vec3 direction;
+                glm::vec3 color {1.0f, 1.0f, 1.0f};
+                glm::vec3 direction {1.0f, 1.0f, 1.0f};
 			};
 
-			void addNode(const Node& node);
+			Light light;
+
+			const Node& node(uint32_t index) const;
+            Node& node(uint32_t index);
+
+            const std::vector<Node>& nodes() const { return nodes_; }
+
+			uint32_t addNode(const Node& node);
             void removeNode(const uint32_t index);
-            Node& getNodeByIndex(const uint32_t index);
+            uint32_t nodeCount() const { return static_cast<uint32_t>(nodes_.size()); }
+
             const BBox& getSceneBounds() const { return scene_bounds_; }
 
-			private:
-				BBox scene_bounds_;
-                std::vector<Node> nodes_;
+			void recomputeSceneBounds(const std::vector<BBox>& mesh_bounds);
 
+		private:
+			BBox scene_bounds_;
+            std::vector<Node> nodes_;
 	};
-
 
 }

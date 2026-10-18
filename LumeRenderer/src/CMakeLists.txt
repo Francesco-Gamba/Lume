@@ -11,6 +11,7 @@ add_executable(lume
     ui/ImGuiLayer.cpp
     ui/DebugPanel.cpp
     core/CameraController.cpp
+    scene/Scene.cpp
 )
 
 target_include_directories(lume PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
