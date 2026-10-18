@@ -26,7 +26,7 @@ namespace lume {
         nodes_[index] = Node();
     }
 
-    void Scene::recomputeSceneBounds(const std::vector<BBox>& mesh_bounds)
+    void Scene::recomputeBounds(const std::vector<BBox>& mesh_bounds)
     {
         BBox new_bounds = BBox();
 

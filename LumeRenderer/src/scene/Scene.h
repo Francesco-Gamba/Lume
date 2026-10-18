@@ -4,6 +4,7 @@
 #include "math/BBox.h"
 #include "scene/Node.h"
 #include <vector>
+#include <string>
 
 
 
@@ -16,7 +17,7 @@ namespace lume {
 			struct Light	//TO DO: MOVE LATER TO OWN CLASS
 			{
                 glm::vec3 color {1.0f, 1.0f, 1.0f};
-                glm::vec3 direction {1.0f, 1.0f, 1.0f};
+                glm::vec3 direction {0.5f, 1.0f, 0.3f};   // points TOWARD the light, world space (normalized in the shader)
 			};
 
 			Light light;
@@ -32,9 +33,13 @@ namespace lume {
 
             const BBox& getSceneBounds() const { return scene_bounds_; }
 
-			void recomputeSceneBounds(const std::vector<BBox>& mesh_bounds);
+			void recomputeBounds(const std::vector<BBox>& mesh_bounds);
+
+			std::string getName() const { return name_; }
+            void setName(std::string name) { name_ = name; }
 
 		private:
+            std::string name_ = "New Scene";
 			BBox scene_bounds_;
             std::vector<Node> nodes_;
 	};

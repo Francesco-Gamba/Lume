@@ -47,7 +47,6 @@ namespace lume{
         bool cull = true;
         bool show_demo = false;
         ViewMode view = ViewMode::Lit;
-        glm::vec3 sun_dir = {0.5, 1.0, 0.3};
         glm::vec3 clear_color = {0.1, 0.1, 0.12};
     };
 

@@ -3,6 +3,7 @@
 #include "scene/Camera.h"
 #include "core/CameraController.h"
 #include "core/Input.h"
+#include "scene/Scene.h"
 #include <imgui.h>
 #include <cstdio>
 #include <cfloat>
@@ -11,7 +12,7 @@
 namespace lume {
 
 	
-	void drawDebugPanel(Camera& camera, DebugSettings& settings, const FrameStats& stats, const InputState& input, CameraController& controller)
+	void drawDebugPanel(Camera& camera, DebugSettings& settings, const FrameStats& stats, const InputState& input, CameraController& controller, Scene& scene)
     {   
         if (settings.show_demo) {
             ImGui::ShowDemoWindow(&settings.show_demo);
@@ -57,8 +58,8 @@ namespace lume {
                         settings.view = (ViewMode)mode;
                     }
 
-                    ImGui::Text("Sun");
-                    ImGui::InputFloat3("##sun", &settings.sun_dir.x, "%.3f");
+                    ImGui::Text("Sun direction (toward light)");
+                    ImGui::InputFloat3("##sun", &scene.light.direction.x, "%.3f");
                     ImGui::Text("Clear color");
                     ImGui::ColorEdit3("##clear", &settings.clear_color.x);
                     ImGui::PopItemWidth();

@@ -11,6 +11,7 @@
 #include "scene/Camera.h"
 #include "core/CameraController.h"
 #include "gfx/CameraUB.h"
+#include "scene/Scene.h"
 
 
 namespace lume {
@@ -30,16 +31,15 @@ private:
     float delta_time_ = 0.0f;
 
     Window window;
+    Scene scene_;
     CameraUB camera_ub_;
     ImGuiLayer imgui_;
     Shader mesh_shader;
     FrameStats stats_;
     DebugSettings settings_;
     bool prev_vsync_ = !DebugSettings{}.vsync;
-
     std::vector<Mesh> meshes_;
-    BBox scene_bounds_;
-    
+
     Camera camera_;
     CameraController controller_;
 };

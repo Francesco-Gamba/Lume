@@ -11,6 +11,7 @@
 #include "scene/MeshLoader.h"
 #include "ui/DebugPanel.h"
 #include <imgui.h>
+#include "scene/SceneLoader.h"
 
 
 namespace lume {
@@ -21,12 +22,7 @@ namespace lume {
         std::cout << glGetString(GL_VENDOR) << " | " << glGetString(GL_RENDERER) << " | " << glGetString(GL_VERSION) << "\n";
         installGlDebugOutput();
 
-        for (const MeshData& data : loadMesh(LUME_ASSET_DIR "/meshes/Separated.glb")) {
-            meshes_.emplace_back(data);
-            scene_bounds_.expand(data.bounds);
-        }
-
-        std::cout << meshes_.size() << " Meshes loaded. \n";
+        loadScene(std::filesystem::path(LUME_ASSET_DIR) / "meshes/Separated.glb", meshes_, scene_);
 
         stats_.gpu_name = reinterpret_cast<const char*> (glGetString(GL_RENDERER));
         stats_.meshes = (int)meshes_.size();
@@ -36,13 +32,19 @@ namespace lume {
             stats_.triangles += mesh.indexCount() / 3;
         }
 
+        glm::vec3 center = {0, 0, 0};
+        float radius = 1;
+
         // Frame the camera on the model's bounding box
-        glm::vec3 center = scene_bounds_.center();
-        float radius = scene_bounds_.radius();
+        if (scene_.getSceneBounds().isValid()) {
+            center = scene_.getSceneBounds().center();
+            radius = scene_.getSceneBounds().radius();
+        }
+
         float dist = radius / glm::sin(glm::radians(camera_.fov_y * 0.5f)) * 1.1f;
         camera_.position = center + glm::vec3(0, radius * 0.3f, dist);
         camera_.lookAt(center);
-        controller_.pivot_distance = glm::length(center - camera_.position);   // first orbit/zoom goes around the model
+        controller_.pivot_distance = glm::length(center - camera_.position);
         camera_.near_plane = radius * 0.01f;
         camera_.far_plane = dist + radius * 4.0f;
 
@@ -54,6 +56,7 @@ namespace lume {
         window.framebufferSize(width, height);
         if (width == 0 || height == 0) return;   // minimized window
         glViewport(0, 0, width, height);
+        float aspect = float(width) / float(height);
 
         if (settings_.vsync != prev_vsync_) {
             glfwSwapInterval(settings_.vsync ? 1 : 0);
@@ -66,22 +69,24 @@ namespace lume {
         settings_.cull ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
         glPolygonMode(GL_FRONT_AND_BACK, settings_.wireframe ? GL_LINE : GL_FILL);
 
-        glm::mat4 model = glm::mat4(1.0f);
-        float aspect = float(width) / float(height);
 
         //Camera Buffer
         camera_ub_.update(camera_, aspect);
 
         //Shader
         mesh_shader.bind();
-        mesh_shader.set("uModel", model);
         mesh_shader.set("uViewMode", (int)settings_.view);
-        mesh_shader.set("uSunDir", settings_.sun_dir);
+        mesh_shader.set("uSunDir", scene_.light.direction);
 
         stats_.draw_calls = 0;
-        for (const Mesh& mesh : meshes_) {
-            mesh.draw();
-            ++ stats_.draw_calls;
+
+        for (const Node& node : scene_.nodes()) {
+
+            if (node.mesh_id != NoMesh) {
+                mesh_shader.set("uModel", node.localMatrix());
+                meshes_[node.mesh_id].draw();
+                ++stats_.draw_calls;
+            }
         }
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -116,7 +121,7 @@ namespace lume {
             if (fb_h > 0) {                                        // minimized window: pan would divide by 0
                 controller_.cameraUpdate(in, camera_, delta_time_, float(fb_h));
             }
-            drawDebugPanel(camera_, settings_ ,stats_, in, controller_);
+            drawDebugPanel(camera_, settings_, stats_, in, controller_, scene_);
 
             frame();
             
