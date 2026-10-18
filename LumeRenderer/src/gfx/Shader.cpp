@@ -1,4 +1,4 @@
-#include "gfx/shader.h"
+#include "gfx/Shader.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -10,7 +10,7 @@
 namespace lume {
 
     namespace {
-        std::string read_file(const std::filesystem::path& path){
+        std::string readFile(const std::filesystem::path& path){
     
             std::ifstream file(path, std::ios::binary);
             if (!file){
@@ -23,7 +23,7 @@ namespace lume {
         }
 
 
-        void split_stages(const std::string& file, std::string& vertex, std::string& fragment) {
+        void splitStages(const std::string& file, std::string& vertex, std::string& fragment) {
             std::istringstream in(file);
             std::string line;
             std::string common;
@@ -48,7 +48,7 @@ namespace lume {
             }
         }
 
-        GLuint compile_stage(GLenum stage,
+        GLuint compileStage(GLenum stage,
             const std::string& source,
             const std::filesystem::path& path,
             const char* stage_name)
@@ -80,18 +80,18 @@ namespace lume {
     Shader::Shader(const std::filesystem::path& path) {
         std::string vs_src;
         std::string fs_src;
-        split_stages(read_file(path), vs_src, fs_src);
+        splitStages(readFile(path), vs_src, fs_src);
 
         if (vs_src.empty() || fs_src.empty()) {
             throw std::runtime_error(path.string() + ": missing #stage vertex or #stage fragment");
         }
 
         // If this throws, the exception already carries the compiler log.
-        GLuint vs = compile_stage(GL_VERTEX_SHADER, vs_src, path, "vertex");
+        GLuint vs = compileStage(GL_VERTEX_SHADER, vs_src, path, "vertex");
         GLuint fs = 0;
 
         try {
-            fs = compile_stage(GL_FRAGMENT_SHADER, fs_src, path, "fragment");
+            fs = compileStage(GL_FRAGMENT_SHADER, fs_src, path, "fragment");
         }
         catch (...) {
             glDeleteShader(vs);  // destructor won't run if the constructor throws

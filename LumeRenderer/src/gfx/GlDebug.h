@@ -2,6 +2,6 @@
 
 namespace lume {
 
-void install_gl_debug_output();
+void installGlDebugOutput();
 
 }  // namespace lume

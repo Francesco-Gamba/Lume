@@ -1,4 +1,4 @@
-#include "ui/imgui_layer.h"
+#include "ui/ImGuiLayer.h"
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
@@ -25,13 +25,13 @@ namespace lume {
         ImGui::DestroyContext();
 	}
 
-	void ImGuiLayer::begin_frame() {
+	void ImGuiLayer::beginFrame() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 	}
 
-	void ImGuiLayer::end_frame() {
+	void ImGuiLayer::endFrame() {
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     }

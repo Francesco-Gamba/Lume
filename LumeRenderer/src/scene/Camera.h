@@ -19,7 +19,7 @@ namespace lume {
             glm::mat4 view() const;
             glm::mat4 proj(float aspect) const;
 
-			void look_at(const glm::vec3& target);
-            void clamp_pitch();
+			void lookAt(const glm::vec3& target);
+            void clampPitch();
 	};
 }

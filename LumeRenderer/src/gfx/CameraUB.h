@@ -23,10 +23,10 @@ namespace lume {
             size_t size() const { return size_;}
 			GLuint id() const { return id_; }
 
-            void reset_history() { is_first_frame_ = true;}
+            void resetHistory() { is_first_frame_ = true;}
 
 		private:
-            struct CameraData       //Must match camera block in Mesh.glsl
+            struct CameraData       //Must match uniform camera block in Mesh.glsl or other shaders in the future
             {
                 glm::mat4 view;
                 glm::mat4 proj;

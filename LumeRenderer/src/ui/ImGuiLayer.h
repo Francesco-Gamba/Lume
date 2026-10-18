@@ -17,7 +17,7 @@ namespace lume {
         ImGuiLayer(ImGuiLayer&& other) = delete;
         ImGuiLayer& operator=(ImGuiLayer&& other) = delete;
 
-        void begin_frame();
-        void end_frame();
+        void beginFrame();
+        void endFrame();
 	};
 }

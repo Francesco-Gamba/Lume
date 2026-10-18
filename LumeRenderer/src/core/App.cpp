@@ -1,5 +1,5 @@
-#include "core/app.h"
-#include "gfx/gl_debug.h"
+#include "core/App.h"
+#include "gfx/GlDebug.h"
 #include <glm/gtc/matrix_transform.hpp>   // translate, rotate, lookAt, perspective
 #include <glm/gtc/type_ptr.hpp>           // value_ptr
 #define GLFW_INCLUDE_NONE
@@ -8,8 +8,8 @@
 #include <iostream>
 #include <stdexcept>
 #include <string>
-#include "scene/Mesh_Loader.h"
-#include "ui/debug_panel.h"
+#include "scene/MeshLoader.h"
+#include "ui/DebugPanel.h"
 #include <imgui.h>
 
 
@@ -19,11 +19,9 @@ namespace lume {
 	App::App() : window(1024, 768, "Lume"), imgui_(window.handle()), mesh_shader(LUME_SHADER_DIR "/mesh.glsl")
     {
         std::cout << glGetString(GL_VENDOR) << " | " << glGetString(GL_RENDERER) << " | " << glGetString(GL_VERSION) << "\n";
-        install_gl_debug_output();
+        installGlDebugOutput();
 
-
-
-        for (const MeshData& data : load_mesh(LUME_ASSET_DIR "/meshes/Separated.glb")) {
+        for (const MeshData& data : loadMesh(LUME_ASSET_DIR "/meshes/Separated.glb")) {
             meshes_.emplace_back(data);
             scene_bounds_.expand(data.bounds);
         }
@@ -35,7 +33,7 @@ namespace lume {
         stats_.triangles = 0;
         
         for (const Mesh& mesh : meshes_) {
-            stats_.triangles += mesh.index_count() / 3;
+            stats_.triangles += mesh.indexCount() / 3;
         }
 
         // Frame the camera on the model's bounding box
@@ -43,7 +41,7 @@ namespace lume {
         float radius = scene_bounds_.radius();
         float dist = radius / glm::sin(glm::radians(camera_.fov_y * 0.5f)) * 1.1f;
         camera_.position = center + glm::vec3(0, radius * 0.3f, dist);
-        camera_.look_at(center);
+        camera_.lookAt(center);
         controller_.pivot_distance = glm::length(center - camera_.position);   // first orbit/zoom goes around the model
         camera_.near_plane = radius * 0.01f;
         camera_.far_plane = dist + radius * 4.0f;
@@ -53,7 +51,7 @@ namespace lume {
 
 	void App::frame(){
         int width, height;
-        window.framebuffer_size(width, height);
+        window.framebufferSize(width, height);
         if (width == 0 || height == 0) return;   // minimized window
         glViewport(0, 0, width, height);
 
@@ -93,41 +91,39 @@ namespace lume {
 
         double last = glfwGetTime();
 
-        while (!window.should_close()) {
+        while (!window.shouldClose()) {
             
             double now = glfwGetTime();
             delta_time_ = float(now - last);
             stats_.update(float(delta_time_ * 1000.0));
             last = now;
 
-
-
-            imgui_.begin_frame();
+            imgui_.beginFrame();
             
             InputState in = window.input();
             const ImGuiIO& io = ImGui::GetIO();
             
             if (io.WantCaptureMouse) {
-                in.clear_mouse();
+                in.clearMouse();
             }
 
             if (io.WantCaptureKeyboard) {
-                in.clear_keyboard();
+                in.clearKeyboard();
             }
 
             int fb_w = 0, fb_h = 0;
-            window.framebuffer_size(fb_w, fb_h);
+            window.framebufferSize(fb_w, fb_h);
             if (fb_h > 0) {                                        // minimized window: pan would divide by 0
-                controller_.camera_update(in, camera_, delta_time_, float(fb_h));
+                controller_.cameraUpdate(in, camera_, delta_time_, float(fb_h));
             }
-            draw_debug_panel(camera_, settings_ ,stats_, in, controller_);
+            drawDebugPanel(camera_, settings_ ,stats_, in, controller_);
 
             frame();
             
-            imgui_.end_frame();
+            imgui_.endFrame();
 
-            window.swap_buffers();
-            window.poll_events();
+            window.swapBuffers();
+            window.pollEvents();
         
         }
 	}

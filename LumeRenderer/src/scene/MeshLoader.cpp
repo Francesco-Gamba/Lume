@@ -1,4 +1,4 @@
-#include "scene/Mesh_Loader.h"
+#include "scene/MeshLoader.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -9,7 +9,7 @@
 
 namespace lume {
 	
-	std::vector<MeshData> load_mesh(const std::filesystem::path& path) {
+	std::vector<MeshData> loadMesh(const std::filesystem::path& path) {
         Assimp::Importer importer;
 
         const aiScene* scene = importer.ReadFile(path.string(),aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices | aiProcess_PreTransformVertices);

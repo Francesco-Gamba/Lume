@@ -1,16 +1,16 @@
 #pragma once
-#include "core/window.h"
+#include "core/Window.h"
 #include <glad/gl.h>
 #include <glm/glm.hpp>
-#include "gfx/shader.h"
+#include "gfx/Shader.h"
 #include "gfx/Mesh.h"
 #include "math/BBox.h"
 #include <vector>
-#include "ui/imgui_layer.h"
-#include "core/debug_settings.h"
+#include "ui/ImGuiLayer.h"
+#include "core/DebugSettings.h"
 #include "scene/Camera.h"
-#include "camera_controller.h"
-#include "gfx/camera_ub.h"
+#include "core/CameraController.h"
+#include "gfx/CameraUB.h"
 
 
 namespace lume {

@@ -1,5 +1,5 @@
 #pragma once
-#include "core/input.h"
+#include "core/Input.h"
 #include "scene/Camera.h"
 
 #include <glm/glm.hpp>
@@ -18,7 +18,7 @@ namespace lume {
             float min_distance = 0.05f;          
             float pivot_distance = 10.0f;         
 
-            void camera_update(const InputState& in, Camera& camera, float dt, float viewport_height);
+            void cameraUpdate(const InputState& in, Camera& camera, float dt, float viewport_height);
 
         private:
             enum class Drag { None, Look, Orbit, Pan, Zoom };
@@ -27,11 +27,11 @@ namespace lume {
             MouseButton drag_button_ = MouseButton::Left; 
 
             glm::vec3 pivot(const Camera& camera) const;
-            void look_around(Camera& camera, glm::vec2 delta) const;
+            void lookAround(Camera& camera, glm::vec2 delta) const;
             void fly(Camera& camera, const InputState& in, float dt);
             void pan(Camera& camera, glm::vec2 delta, float viewport_height) const;
             void orbit(Camera& camera, glm::vec2 delta) const;
-            void zoom_by(Camera& camera, float factor);
+            void zoomBy(Camera& camera, float factor);
     };
 
 }  // namespace lume

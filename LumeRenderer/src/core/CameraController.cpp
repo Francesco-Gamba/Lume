@@ -1,4 +1,4 @@
-#include "core/camera_controller.h"
+#include "core/CameraController.h"
 
 #include <cmath>
 
@@ -9,11 +9,11 @@ glm::vec3 CameraController::pivot(const Camera& camera) const
     return camera.position + camera.forward() * pivot_distance;
 }
 
-void CameraController::look_around(Camera& camera, glm::vec2 delta) const
+void CameraController::lookAround(Camera& camera, glm::vec2 delta) const
 {
     camera.yaw += delta.x * look_sensitivity;
     camera.pitch -= delta.y * look_sensitivity;  
-    camera.clamp_pitch();
+    camera.clampPitch();
 }
 
 void CameraController::fly(Camera& camera, const InputState& in, float dt)
@@ -48,19 +48,19 @@ void CameraController::orbit(Camera& camera, glm::vec2 delta) const
 
     camera.yaw += delta.x * rotation_sensitivity;
     camera.pitch -= delta.y * rotation_sensitivity;
-    camera.clamp_pitch();
+    camera.clampPitch();
 
     camera.position = p - camera.forward() * pivot_distance;
 }
 
-void CameraController::zoom_by(Camera& camera, float factor)
+void CameraController::zoomBy(Camera& camera, float factor)
 {
     const glm::vec3 p = pivot(camera);
     pivot_distance = glm::max(pivot_distance * factor, min_distance);
     camera.position = p - camera.forward() * pivot_distance;
 }
 
-void CameraController::camera_update(const InputState& in, Camera& camera, float dt, float viewport_height)
+void CameraController::cameraUpdate(const InputState& in, Camera& camera, float dt, float viewport_height)
 {
     const bool alt = in.down(Key::LeftAlt);
 
@@ -89,7 +89,7 @@ void CameraController::camera_update(const InputState& in, Camera& camera, float
 
     switch (drag_) {
     case Drag::Look:
-        look_around(camera, in.mouse_delta);
+        lookAround(camera, in.mouse_delta);
         fly(camera, in, dt); 
         break;
 
@@ -98,12 +98,12 @@ void CameraController::camera_update(const InputState& in, Camera& camera, float
     case Drag::Pan: pan(camera, in.mouse_delta, viewport_height); break;
 
     case Drag::Zoom:
-        zoom_by(camera, std::exp(in.mouse_delta.y * drag_zoom_sensitivity));
+        zoomBy(camera, std::exp(in.mouse_delta.y * drag_zoom_sensitivity));
         break;
 
     case Drag::None:
         if (in.scroll != 0.0f) {
-            zoom_by(camera, std::pow(1.0f - zoom_step, in.scroll));   // +1 notch: 10% closer, -1: back out
+            zoomBy(camera, std::pow(1.0f - zoom_step, in.scroll));   // +1 notch: 10% closer, -1: back out
         }
         break;
     }

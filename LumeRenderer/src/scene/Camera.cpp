@@ -32,17 +32,17 @@ glm::mat4 Camera::proj(float aspect) const
     return glm::perspective(glm::radians(fov_y), aspect, near_plane, far_plane);
 }
 
-void Camera::look_at(const glm::vec3& target) {
+void Camera::lookAt(const glm::vec3& target) {
     const glm::vec3 d = target - position;
     if (glm::dot(d, d) < 1e-8f) return;   // target on top of the camera: keep current angles
 
     const glm::vec3 f = glm::normalize(d);
     yaw   = glm::degrees(std::atan2(f.x, -f.z));
     pitch = glm::degrees(std::asin(glm::clamp(f.y, -1.0f, 1.0f)));   // clamp: asin domain
-    clamp_pitch();
+    clampPitch();
 }
 
-void Camera::clamp_pitch() {
+void Camera::clampPitch() {
     pitch = glm::clamp(pitch, -89.0f, 89.0f);
 }
 

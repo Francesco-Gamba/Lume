@@ -7,5 +7,5 @@ namespace lume {
     struct InputState;
     class CameraController;
 	
-	void draw_debug_panel(Camera& camera, DebugSettings& settings, const FrameStats& stats, const InputState& input, CameraController& controller);
+	void drawDebugPanel(Camera& camera, DebugSettings& settings, const FrameStats& stats, const InputState& input, CameraController& controller);
 }

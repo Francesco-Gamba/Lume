@@ -1,8 +1,8 @@
-#include "ui/debug_panel.h"
-#include "core/debug_settings.h"
+#include "ui/DebugPanel.h"
+#include "core/DebugSettings.h"
 #include "scene/Camera.h"
-#include "core/camera_controller.h"
-#include "core/input.h"
+#include "core/CameraController.h"
+#include "core/Input.h"
 #include <imgui.h>
 #include <cstdio>
 #include <cfloat>
@@ -11,7 +11,7 @@
 namespace lume {
 
 	
-	void draw_debug_panel(Camera& camera, DebugSettings& settings, const FrameStats& stats, const InputState& input, CameraController& controller)
+	void drawDebugPanel(Camera& camera, DebugSettings& settings, const FrameStats& stats, const InputState& input, CameraController& controller)
     {   
         if (settings.show_demo) {
             ImGui::ShowDemoWindow(&settings.show_demo);
@@ -74,7 +74,7 @@ namespace lume {
 
                     ImGui::Text("Pitch (deg)");
                     ImGui::InputFloat("##cam_pitch", &camera.pitch, 1.0f, 15.0f, "%.2f");
-                    camera.clamp_pitch();
+                    camera.clampPitch();
 
                     ImGui::SeparatorText("Lens");
                     ImGui::Text("Vertical FOV (deg)");

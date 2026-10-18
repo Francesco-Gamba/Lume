@@ -1,5 +1,5 @@
 #pragma once
-#include "core/input.h"
+#include "core/Input.h"
 
 struct GLFWwindow;
 
@@ -16,24 +16,24 @@ public:
     Window(Window&&) = delete;
     Window& operator=(Window&&) = delete;
 
-    bool should_close() const;
-    void swap_buffers();
-    void poll_events();
+    bool shouldClose() const;
+    void swapBuffers();
+    void pollEvents();
 
-    void framebuffer_size(int& width, int& height) const;
+    void framebufferSize(int& width, int& height) const;
 
     GLFWwindow* handle() const { return handle_; }
 
     const InputState& input() const { return input_; } 
 
 private:
-    static void error_callback(int error, const char* description);
-    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-    static void scroll_callback(GLFWwindow* window, double xoff, double yoff);
+    static void errorCallback(int error, const char* description);
+    static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void scrollCallback(GLFWwindow* window, double xoff, double yoff);
     
     GLFWwindow* handle_ = nullptr;
 
-    void update_input();
+    void updateInput();
     InputState input_;
     float scroll_accum_ = 0;
     glm::vec2 prev_mouse_ {0};

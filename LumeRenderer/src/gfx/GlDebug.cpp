@@ -1,4 +1,4 @@
-#include "gfx/gl_debug.h"
+#include "gfx/GlDebug.h"
 
 #include <glad/gl.h>
 
@@ -7,7 +7,7 @@
 namespace lume {
 
     namespace {
-        void GLAD_API_PTR gl_debug_callback(GLenum source,
+        void GLAD_API_PTR glDebugCallback(GLenum source,
                                             GLenum type,
                                             GLuint id,
                                             GLenum severity,
@@ -51,7 +51,7 @@ namespace lume {
         }
     }
 
-    void install_gl_debug_output()
+    void installGlDebugOutput()
     {
         GLint context_flags = 0;
         glGetIntegerv(GL_CONTEXT_FLAGS, &context_flags);
@@ -63,7 +63,7 @@ namespace lume {
 
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-        glDebugMessageCallback(gl_debug_callback, nullptr);
+        glDebugMessageCallback(glDebugCallback, nullptr);
         glDebugMessageControl(
             GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
     }

@@ -33,14 +33,14 @@ namespace lume {
         bool down(MouseButton b) const { return mouse_down[(int)b]; }
         bool pressed(MouseButton b) const { return mouse_pressed[(int)b]; }
 
-		void clear_mouse() {
+		void clearMouse() {
             mouse_delta = glm::vec2(0.0f);
 			scroll = 0;
             mouse_down = {};
             mouse_pressed = {};
 		}
 
-		void clear_keyboard() { 
+		void clearKeyboard() { 
 			key_down = {};
             key_pressed = {};
 		}

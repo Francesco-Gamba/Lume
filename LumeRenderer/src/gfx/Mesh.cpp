@@ -1,4 +1,4 @@
-#include "Mesh.h"
+#include "gfx/Mesh.h"
 #include <glad/gl.h>
 #include <cstddef>
 #include <utility>

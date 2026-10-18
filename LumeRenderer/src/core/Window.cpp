@@ -1,9 +1,9 @@
 #define GLFW_INCLUDE_NONE
 
-#include "core/window.h"
+#include "core/Window.h"
 #include "glad/gl.h"
 #include "GLFW/glfw3.h"
-#include "core/input.h"
+#include "core/Input.h"
 #include <array>
 #include <iostream>
 #include <stdexcept>
@@ -28,22 +28,22 @@ namespace lume{
         };
     }
 
-    void Window::error_callback(int error, const char* description) {
+    void Window::errorCallback(int error, const char* description) {
         std::cerr << error << " " << description << "\n";
     }
 
-    void Window::key_callback(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/) {
+    void Window::keyCallback(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/) {
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
             glfwSetWindowShouldClose(window, GLFW_TRUE);
         }
     }
 
-    void Window::scroll_callback(GLFWwindow* window, double /*xoff*/, double yoff) {
+    void Window::scrollCallback(GLFWwindow* window, double /*xoff*/, double yoff) {
         auto* self = static_cast<Window*>(glfwGetWindowUserPointer(window));
         self->scroll_accum_ += static_cast<float>(yoff);
     }
 
-    void Window::update_input() {
+    void Window::updateInput() {
         for (size_t i = 0; i < kGlfwKey.size(); ++i) {
             const bool now = glfwGetKey(handle_, kGlfwKey[i]) == GLFW_PRESS;
             input_.key_pressed[i] = now && !input_.key_down[i];
@@ -72,7 +72,7 @@ namespace lume{
     Window::Window(int width, int height, const char* title)
     {
         
-        glfwSetErrorCallback(error_callback);
+        glfwSetErrorCallback(errorCallback);
 
 
         if (glfwInit() != GLFW_TRUE) {
@@ -91,8 +91,8 @@ namespace lume{
         }
 
         glfwSetWindowUserPointer(handle_, this);  
-        glfwSetKeyCallback(handle_, key_callback);
-        glfwSetScrollCallback(handle_, scroll_callback);
+        glfwSetKeyCallback(handle_, keyCallback);
+        glfwSetScrollCallback(handle_, scrollCallback);
         glfwMakeContextCurrent(handle_);
 
 
@@ -110,20 +110,20 @@ namespace lume{
         glfwTerminate();
     }
 
-    bool Window::should_close() const {
+    bool Window::shouldClose() const {
         return glfwWindowShouldClose(handle_);
     }
 
-    void Window::swap_buffers() {
+    void Window::swapBuffers() {
         glfwSwapBuffers(handle_);
     }
 
-    void Window::poll_events() {
+    void Window::pollEvents() {
         glfwPollEvents();
-        update_input();
+        updateInput();
     }
 
-    void Window::framebuffer_size(int& width, int& height) const {
+    void Window::framebufferSize(int& width, int& height) const {
         glfwGetFramebufferSize(handle_, &width, &height);
     }
 }

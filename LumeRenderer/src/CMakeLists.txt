@@ -1,16 +1,16 @@
 add_executable(lume
     main.cpp
-    core/window.cpp
-    core/app.cpp
-    gfx/gl_debug.cpp
+    core/Window.cpp
+    core/App.cpp
+    gfx/GlDebug.cpp
     gfx/Shader.cpp
     gfx/Mesh.cpp
-    gfx/camera_ub.cpp
-    scene/Mesh_Loader.cpp
+    gfx/CameraUB.cpp
+    scene/MeshLoader.cpp
     scene/Camera.cpp
-    ui/imgui_layer.cpp
-    ui/debug_panel.cpp
-    core/camera_controller.cpp
+    ui/ImGuiLayer.cpp
+    ui/DebugPanel.cpp
+    core/CameraController.cpp
 )
 
 target_include_directories(lume PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
