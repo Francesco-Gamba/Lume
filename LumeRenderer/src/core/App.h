@@ -1,17 +1,14 @@
 #pragma once
 #include "core/Window.h"
-#include <glad/gl.h>
 #include <glm/glm.hpp>
-#include "gfx/Shader.h"
-#include "gfx/Mesh.h"
 #include "math/BBox.h"
 #include <vector>
 #include "ui/ImGuiLayer.h"
 #include "core/DebugSettings.h"
 #include "scene/Camera.h"
 #include "core/CameraController.h"
-#include "gfx/CameraUB.h"
 #include "scene/Scene.h"
+#include "renderer/Renderer.h"
 
 
 namespace lume {
@@ -30,18 +27,14 @@ private:
     void frame();
     float delta_time_ = 0.0f;
 
-    Window window;
-    Scene scene_;
-    CameraUB camera_ub_;
+    Window window_;
     ImGuiLayer imgui_;
-    Shader mesh_shader;
-    FrameStats stats_;
-    DebugSettings settings_;
-    bool prev_vsync_ = !DebugSettings{}.vsync;
-    std::vector<Mesh> meshes_;
-
+    Renderer renderer_;
+    Scene scene_;
     Camera camera_;
     CameraController controller_;
+    DebugSettings settings_;
+    FrameStats stats_;
 };
 
 }  // namespace lume

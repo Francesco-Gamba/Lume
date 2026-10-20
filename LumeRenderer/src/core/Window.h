@@ -25,6 +25,7 @@ public:
     GLFWwindow* handle() const { return handle_; }
 
     const InputState& input() const { return input_; } 
+    void setVsync(const bool state) { vsync_ = state; }
 
 private:
     static void errorCallback(int error, const char* description);
@@ -38,6 +39,7 @@ private:
     float scroll_accum_ = 0;
     glm::vec2 prev_mouse_ {0};
     bool has_prev_mouse_ = false;
+    bool vsync_ = true;
 
 };
 

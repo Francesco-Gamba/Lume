@@ -7,6 +7,7 @@
 #include <array>
 #include <iostream>
 #include <stdexcept>
+#include "gfx/GlDebug.h"
 
 namespace lume{
 
@@ -101,6 +102,9 @@ namespace lume{
             glfwTerminate();
             throw std::runtime_error("gladLoadGl failed to load OpenGl functions");
         }
+
+        std::cout << glGetString(GL_VENDOR) << " | " << glGetString(GL_RENDERER) << " | " << glGetString(GL_VERSION) << "\n";
+        installGlDebugOutput();
     }
 
     Window::~Window() {

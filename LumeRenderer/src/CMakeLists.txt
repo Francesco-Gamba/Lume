@@ -13,6 +13,7 @@ add_executable(lume
     core/CameraController.cpp
     scene/Scene.cpp
     scene/SceneLoader.cpp
+    renderer/Renderer.cpp
 )
 
 target_include_directories(lume PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

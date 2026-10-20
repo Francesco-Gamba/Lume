@@ -3,7 +3,10 @@
 #include <filesystem>
 
 namespace lume {
+	class Scene; 
 	class Mesh;
-	class Scene;
-	void loadScene(const std::filesystem::path& path, std::vector<Mesh>& meshes, Scene& scene);
+}  // namespace lume
+
+namespace lume::SceneLoader {
+	void load(const std::filesystem::path& path, std::vector<Mesh>& meshes, Scene& scene);
 }

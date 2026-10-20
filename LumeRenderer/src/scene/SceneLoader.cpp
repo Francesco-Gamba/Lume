@@ -1,11 +1,11 @@
 #include "scene/SceneLoader.h"
 #include "gfx/Mesh.h"
 #include "scene/MeshLoader.h"
-#include "scene/scene.h"
+#include "scene/Scene.h"
 #include <iostream>
 
-namespace lume {
-    void loadScene(const std::filesystem::path& path, std::vector<Mesh>& meshes, Scene& scene)
+namespace lume::SceneLoader {
+    void load(const std::filesystem::path& path, std::vector<Mesh>& meshes, Scene& scene)
     {
         std::vector<MeshData> mesh_data = loadMesh(path);
         std::vector<BBox> meshes_bounds;
