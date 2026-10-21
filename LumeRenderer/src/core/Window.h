@@ -25,7 +25,8 @@ public:
     GLFWwindow* handle() const { return handle_; }
 
     const InputState& input() const { return input_; } 
-    void setVsync(const bool state) { vsync_ = state; }
+    void setVsync(const bool state);
+    const bool getVsync() const { return vsync_; }
 
 private:
     static void errorCallback(int error, const char* description);

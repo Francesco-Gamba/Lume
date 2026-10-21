@@ -76,15 +76,23 @@ namespace lume {
 
             int fb_w = 0, fb_h = 0;
             window_.framebufferSize(fb_w, fb_h);
-            if (fb_h > 0) {                                        // minimized window: pan would divide by 0
+            if (fb_h > 0) {
                 controller_.cameraUpdate(in, camera_, delta_time_, float(fb_h));
             }
+
+
             drawDebugPanel(camera_, settings_, stats_, in, controller_, scene_);
 
             frame();
             
             imgui_.endFrame();
 
+
+
+            if (settings_.vsync != window_.getVsync()) {
+                window_.setVsync(settings_.vsync);
+            }
+                        
             window_.swapBuffers();
             window_.pollEvents();
         

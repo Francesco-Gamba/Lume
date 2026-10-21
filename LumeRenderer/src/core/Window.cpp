@@ -29,7 +29,13 @@ namespace lume{
         };
     }
 
-    void Window::errorCallback(int error, const char* description) {
+    void Window::setVsync(const bool state) {
+        vsync_ = state;
+        glfwSwapInterval(vsync_);
+    }
+
+    void Window::errorCallback(int error, const char* description)
+    {
         std::cerr << error << " " << description << "\n";
     }
 
@@ -75,7 +81,6 @@ namespace lume{
         
         glfwSetErrorCallback(errorCallback);
 
-
         if (glfwInit() != GLFW_TRUE) {
             throw std::runtime_error("glfw init failed");
         }
@@ -102,6 +107,9 @@ namespace lume{
             glfwTerminate();
             throw std::runtime_error("gladLoadGl failed to load OpenGl functions");
         }
+
+
+        setVsync(vsync_);
 
         std::cout << glGetString(GL_VENDOR) << " | " << glGetString(GL_RENDERER) << " | " << glGetString(GL_VERSION) << "\n";
         installGlDebugOutput();

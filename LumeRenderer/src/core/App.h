@@ -1,7 +1,5 @@
 #pragma once
 #include "core/Window.h"
-#include <glm/glm.hpp>
-#include "math/BBox.h"
 #include <vector>
 #include "ui/ImGuiLayer.h"
 #include "core/DebugSettings.h"
