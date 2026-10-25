@@ -15,9 +15,10 @@ add_executable(lume
     scene/SceneLoader.cpp
     renderer/Renderer.cpp
     scene/Node.cpp
+    scene/StbImage.cpp
 )
 
-target_include_directories(lume PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(lume PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${Stb_INCLUDE_DIR})
 
 target_link_libraries(lume PRIVATE
     glad

@@ -9,6 +9,7 @@ namespace lume {
     {
         index_count_ = (GLsizei)data.indices.size(); 
         bounds_ = data.bounds;
+        material_index_ = data.material_index;
 
         glCreateBuffers(1, &vbo_);
         glNamedBufferStorage(vbo_, data.vertices.size() * sizeof(Vertex), data.vertices.data(), 0);
@@ -47,6 +48,7 @@ namespace lume {
         ebo_ = other.ebo_;
         index_count_ = other.index_count_;
         bounds_ = other.bounds_;
+        material_index_ = other.material_index_;
 
         other.vao_ = 0;
         other.ebo_ = 0;
@@ -64,6 +66,7 @@ namespace lume {
             ebo_ = std::exchange(other.ebo_, 0); 
             index_count_ = std::exchange(other.index_count_, 0);
             bounds_ = other.bounds_;
+            material_index_ = other.material_index_;
         }
 
         return *this;

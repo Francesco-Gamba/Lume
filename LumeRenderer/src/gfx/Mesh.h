@@ -21,6 +21,7 @@ namespace lume {
         std::vector<Vertex> vertices;
         std::vector<uint32_t> indices;
         BBox bounds;
+        uint32_t material_index;
     };
 
     class Mesh
@@ -41,6 +42,7 @@ namespace lume {
 
             const BBox& bounds() const { return bounds_; }
             GLsizei indexCount() const { return index_count_; }
+            uint32_t getMaterialIndex() const { return material_index_; }
 
 
         private:
@@ -52,6 +54,8 @@ namespace lume {
 
             GLsizei index_count_ = 0;
             BBox bounds_;
+            uint32_t material_index_;
+
     };
 
 }
