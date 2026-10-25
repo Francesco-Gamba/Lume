@@ -50,11 +50,11 @@ namespace lume {
                     ImGui::Checkbox("Wireframe", &settings.wireframe);
                     ImGui::Checkbox("Backface Culling", &settings.cull);
 
-                    const char* modes[] = {"Lit", "Normals", "Flat"};
+                    const char* modes[] = {"Lit", "Normals", "Flat", "Uv"};
                     int mode = int(settings.view);
 
                     ImGui::Text("View");
-                    if (ImGui::Combo("##view", &mode, modes, 3)) {
+                    if (ImGui::Combo("##view", &mode, modes, 4)) {
                         settings.view = (ViewMode)mode;
                     }
 

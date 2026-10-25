@@ -2,11 +2,28 @@
 #include "gfx/Mesh.h"
 #include <filesystem>
 #include <vector>
+#include "scene/Node.h"
+
 
 namespace lume {
 
-	// Loads every mesh in a model file as CPU-side data, one MeshData per mesh.
-	// Throws std::runtime_error if the file can't be read.
-	std::vector<MeshData> loadMesh(const std::filesystem::path& path);
+	struct ImportedNode
+    {
+        std::string name;
+        uint32_t parent = NoParent;  // index into ImportedFile::nodes
+        glm::vec3 translation{0.0f};
+        glm::quat rotation = glm::identity<glm::quat>();
+        glm::vec3 scale{1.0f};
+        std::vector<uint32_t> meshes;  // indices into ImportedFile::meshes (can be 0, 1 or many)
+    };
+
+    struct ImportedFile
+    {
+        std::vector<MeshData> meshes;     // meshes[i] == Assimp mesh i
+        std::vector<ImportedNode> nodes;  // parents always before children
+    };
+
+    ImportedFile importFile(const std::filesystem::path& path);
+
 
 }  // namespace lume

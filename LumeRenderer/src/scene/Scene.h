@@ -27,13 +27,14 @@ namespace lume {
 
             const std::vector<Node>& nodes() const { return nodes_; }
 
-			uint32_t addNode(const Node& node);
+			uint32_t addNode(const Node& node, uint32_t parent = NoParent);
             void removeNode(const uint32_t index);
             uint32_t nodeCount() const { return static_cast<uint32_t>(nodes_.size()); }
 
             const BBox& getSceneBounds() const { return scene_bounds_; }
 
 			void recomputeBounds(const std::vector<BBox>& mesh_bounds);
+            void updateTransforms();   // recompute world matrices of dirty nodes (and their children)
 
 			std::string getName() const { return name_; }
             void setName(std::string name) { name_ = name; }
@@ -42,6 +43,6 @@ namespace lume {
             std::string name_ = "New Scene";
 			BBox scene_bounds_;
             std::vector<Node> nodes_;
-	};
+    };
 
 }

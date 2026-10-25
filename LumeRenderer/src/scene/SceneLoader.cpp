@@ -5,23 +5,51 @@
 #include <iostream>
 
 namespace lume::SceneLoader {
+
     void load(const std::filesystem::path& path, std::vector<Mesh>& meshes, Scene& scene)
     {
-        std::vector<MeshData> mesh_data = loadMesh(path);
-        std::vector<BBox> meshes_bounds;
-        meshes_bounds.reserve(mesh_data.size());
+        ImportedFile file = importFile(path);
 
-        for (int i = 0; i < static_cast<int>(mesh_data.size()); i++) {
-            meshes.emplace_back(mesh_data[i]);
-            meshes_bounds.push_back(mesh_data[i].bounds);
+        std::vector<BBox> mesh_bounds;
+        mesh_bounds.reserve(file.meshes.size());
 
-            Node node;
-            node.mesh_id = static_cast<uint32_t>(i);
-            scene.addNode(node);
+        for (const MeshData& data : file.meshes) {
+            meshes.emplace_back(data);
+            mesh_bounds.push_back(data.bounds);
         }
 
-        scene.recomputeBounds(meshes_bounds);
+        std::vector<uint32_t> remap(file.nodes.size(), NoParent);
+
+        for (size_t i = 0; i < file.nodes.size(); ++i) {
+            const ImportedNode& rec = file.nodes[i];
+            const uint32_t parent = (rec.parent == NoParent) ? NoParent : remap[rec.parent];
+
+            Node node;
+            node.setName(rec.name);
+            node.setTranslation(rec.translation);
+            node.setRotation(rec.rotation);
+            node.setScale(rec.scale);
+
+            if (!rec.meshes.empty()) {
+                node.setMeshID(rec.meshes[0]);
+            }
+
+            remap[i] = scene.addNode(node, parent);
+
+            for (size_t k = 1; k < rec.meshes.size(); ++k) {
+                Node extra;
+                extra.setName(rec.name + "_" + std::to_string(k));
+                extra.setMeshID(rec.meshes[k]);
+                scene.addNode(extra, remap[i]);
+            }
+        }
+
+        scene.updateTransforms();
+        scene.recomputeBounds(mesh_bounds);
 
         std::cout << meshes.size() << " Mesh(es) loaded in scene: " << scene.getName() << " \n";
     }
+
+
 }
+

@@ -38,7 +38,7 @@ namespace lume{
 
 	};
 
-    enum class ViewMode : int {Lit = 0, Normals = 1, Flat = 2};
+    enum class ViewMode : int {Lit = 0, Normals = 1, Flat = 2, Uv = 3};
 
     struct DebugSettings
     {

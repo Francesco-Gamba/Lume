@@ -14,6 +14,7 @@ add_executable(lume
     scene/Scene.cpp
     scene/SceneLoader.cpp
     renderer/Renderer.cpp
+    scene/Node.cpp
 )
 
 target_include_directories(lume PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

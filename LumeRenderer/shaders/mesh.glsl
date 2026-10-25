@@ -20,11 +20,14 @@ uniform vec3 uSunDir;
 
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec3 aNormal;
+layout(location = 2) in vec2 aTexcoord;
 
 out vec3 vNormal;
+out vec2 vTexcoord;
 
 void main() {
     vNormal = mat3(uModel) * aNormal;
+    vTexcoord = aTexcoord;
     gl_Position = uViewProj * uModel * vec4(aPos, 1.0);
 }
 
@@ -32,6 +35,7 @@ void main() {
 #stage fragment
 
 in vec3 vNormal;
+in vec2 vTexcoord;
 out vec4 FragColor;
 
 void main() {
@@ -44,9 +48,12 @@ void main() {
     else if(uViewMode == 2){
         color = vec3(0.8);
     }
+    else if(uViewMode == 3){
+        color = vec3(vTexcoord, 0.0);
+    }
     else{
-        float d = max(dot(n, normalize(uSunDir)), 0.0);
-        color = vec3(0.8) * (0.15 + 0.85*d);
+       float d = max(dot(n, normalize(uSunDir)), 0.0);
+       color = vec3(0.8) * (0.15 + 0.85*d);
     }
 
     FragColor = vec4(color, 1.0);

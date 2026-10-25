@@ -1,6 +1,5 @@
 #pragma once
 #include "core/Window.h"
-#include <vector>
 #include "ui/ImGuiLayer.h"
 #include "core/DebugSettings.h"
 #include "scene/Camera.h"

@@ -19,7 +19,7 @@ namespace lume {
     {
         window_.setVsync(settings_.vsync);
 
-        renderer_.loadScene(std::filesystem::path(LUME_ASSET_DIR) / "meshes/Separated.glb", scene_);
+        renderer_.loadScene(std::filesystem::path(LUME_ASSET_DIR) / "meshes/DamagedHelmet.glb", scene_);
         stats_.gpu_name = reinterpret_cast<const char*> (glGetString(GL_RENDERER));
         stats_.meshes = renderer_.meshCount();
         stats_.triangles = renderer_.triangleCount();
@@ -47,6 +47,7 @@ namespace lume {
         if (width == 0 || height == 0)
             return;  // minimized 
 
+        scene_.updateTransforms();   // world matrices for anything edited this frame
         renderer_.render(scene_, camera_, settings_, width, height, stats_);
 	}
 

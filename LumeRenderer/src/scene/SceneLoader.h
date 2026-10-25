@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <filesystem>
+#include "scene/MeshLoader.h"
 
 namespace lume {
 	class Scene; 

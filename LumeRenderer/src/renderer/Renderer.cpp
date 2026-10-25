@@ -32,9 +32,9 @@ namespace lume {
         stats.draw_calls = 0;
 
         for (const Node& node : scene.nodes()) {
-            if (node.mesh_id != NoMesh) {
-                mesh_shader_.set("uModel", node.localMatrix());
-                meshes_[node.mesh_id].draw();
+            if (node.getMeshID() != NoMesh) {
+                mesh_shader_.set("uModel", node.worldMatrix());
+                meshes_[node.getMeshID()].draw();
                 ++stats.draw_calls;
             }
         }

@@ -13,6 +13,7 @@ namespace lume {
 	struct Vertex {
         glm::vec3 pos;
         glm::vec3 normal;
+        glm::vec2 texcoord;
     };
 
     struct MeshData

@@ -29,6 +29,10 @@ namespace lume {
         glEnableVertexArrayAttrib(vao_, 1);
         glVertexArrayAttribFormat(vao_, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
         glVertexArrayAttribBinding(vao_, 1, 0);
+
+        glEnableVertexArrayAttrib(vao_, 2);
+        glVertexArrayAttribFormat(vao_, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, texcoord));
+        glVertexArrayAttribBinding(vao_, 2, 0);
     }
 
     Mesh::~Mesh()
