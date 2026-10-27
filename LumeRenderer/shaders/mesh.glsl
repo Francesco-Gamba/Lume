@@ -38,6 +38,10 @@ in vec3 vNormal;
 in vec2 vTexcoord;
 out vec4 FragColor;
 
+
+layout(binding = 0) uniform sampler2D uBaseColor;
+
+
 void main() {
     vec3 n = normalize(vNormal);
     vec3 color;
@@ -51,6 +55,10 @@ void main() {
     else if(uViewMode == 3){
         color = vec3(vTexcoord, 0.0);
     }
+    else if (uViewMode == 4) {
+       color = texture(uBaseColor, vTexcoord).rgb;
+       color = pow(color, vec3(1.0 / 2.2));   // temp: linear → display, until the M4 output pass
+   }
     else{
        float d = max(dot(n, normalize(uSunDir)), 0.0);
        color = vec3(0.8) * (0.15 + 0.85*d);

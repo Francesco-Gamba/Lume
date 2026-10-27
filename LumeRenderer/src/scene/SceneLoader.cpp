@@ -2,11 +2,12 @@
 #include "gfx/Mesh.h"
 #include "scene/MeshLoader.h"
 #include "scene/Scene.h"
+#include "gfx/Texture.h"
 #include <iostream>
 
 namespace lume::SceneLoader {
 
-    void load(const std::filesystem::path& path, std::vector<Mesh>& meshes, Scene& scene)
+    void load(const std::filesystem::path& path, std::vector<Mesh>& meshes, Scene& scene, std::vector<Texture>& textures)
     {
         ImportedFile file = importFile(path);
 
@@ -16,6 +17,11 @@ namespace lume::SceneLoader {
         for (const MeshData& data : file.meshes) {
             meshes.emplace_back(data);
             mesh_bounds.push_back(data.bounds);
+        }
+
+        textures.reserve(file.images.size());
+        for (const ImportedImage& img : file.images) {
+            textures.emplace_back(img.width, img.height, true, img.pixels);
         }
 
         std::vector<uint32_t> remap(file.nodes.size(), NoParent);

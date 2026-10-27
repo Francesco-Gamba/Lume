@@ -29,6 +29,12 @@ namespace lume {
         mesh_shader_.set("uViewMode", (int)settings.view);
         mesh_shader_.set("uSunDir", scene.light.direction);
 
+        //TEXTURES BINDING
+        const Texture& base = textures_.empty() ? white_tex_ : textures_[0];
+        base.bind(0);
+        
+
+
         stats.draw_calls = 0;
 
         for (const Node& node : scene.nodes()) {
@@ -48,7 +54,7 @@ namespace lume {
     }
 
     void Renderer::loadScene(const std::filesystem::path& path, Scene& scene) {
-        SceneLoader::load(path, meshes_, scene);
+        SceneLoader::load(path, meshes_, scene, textures_);
     }
 
     int Renderer::meshCount() const {

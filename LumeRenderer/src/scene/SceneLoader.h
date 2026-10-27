@@ -3,11 +3,13 @@
 #include <filesystem>
 #include "scene/MeshLoader.h"
 
+
 namespace lume {
 	class Scene; 
 	class Mesh;
-}  // namespace lume
+    class Texture;
+    }  // namespace lume
 
 namespace lume::SceneLoader {
-	void load(const std::filesystem::path& path, std::vector<Mesh>& meshes, Scene& scene);
+	void load(const std::filesystem::path& path, std::vector<Mesh>& meshes, Scene& scene, std::vector<Texture>& textures);
 }
