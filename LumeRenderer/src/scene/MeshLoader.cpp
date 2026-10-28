@@ -133,7 +133,7 @@ uint32_t loadImage(const aiScene* scene,
     const uint32_t index = static_cast<uint32_t>(out.images.size() - 1);
 
     std::cout << "Loaded image with index: [" << index << "] \n"
-              << "  Width: " << w << "\n    Height: " << h << "\n    Comp: " << comp << "\n";
+              << "  Width: " << w << "\n    Height: " << h << "\n   Comp: " << comp << "\n";
 
     cache[ref] = index;
     return index;

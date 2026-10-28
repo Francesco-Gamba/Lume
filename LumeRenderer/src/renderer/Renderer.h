@@ -5,6 +5,7 @@
 #include "gfx/Shader.h"
 #include "gfx/Mesh.h"
 #include "gfx/Texture.h"
+#include "gfx/Material.h"
 
 namespace lume {
 
@@ -30,7 +31,9 @@ namespace lume {
             CameraUB camera_ub_;
             std::vector<Mesh> meshes_;
             std::vector<Texture> textures_;
+            std::vector<Material> materials_;
             Texture white_tex_{1, 1, false, {255, 255, 255, 255}};
+            
     };
 
 }  // namespace lume
